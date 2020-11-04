@@ -4,7 +4,7 @@ import numpy as np
 from itertools import combinations
 
 pattern = "\$cleps [0-9]"
-TOKEN = "NzcyODk1Mjg3NjI2Njk0Njc2.X6BU1A.oH6RD2Vjm1YQOBuOaJfiZi20QCU"
+TOKEN = "token"
 
 n = ['anishkasi', 'Wolfinthehouse', 'pindabc', 'aprbhd', 'the_week', 'JakeSuli', 'gopuman', 'akshara', 'greybeard278', 'Dobby']
 
