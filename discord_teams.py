@@ -4,9 +4,21 @@ import numpy as np
 from itertools import combinations
 
 pattern = "\$cleps [0-9]"
-TOKEN = "token"
+TOKEN = "NzczODUxNjE2MzAyMzMzOTc2.X6PPeg.TSBPOf4_3LJN4FtouHh5WJ_N2sk"
 
 n = ['anishkasi', 'Wolfinthehouse', 'pindabc', 'aprbhd', 'the_week', 'JakeSuli', 'gopuman', 'akshara', 'greybeard278', 'Dobby']
+nicknames = {
+        'anishkasi': set(['kasi','anishkasi']),
+        'Wolfinthehouse': set(['neil','pratith','juice','Wolfinthehouse']),
+        'pindabc': set(['pinds','yogesh','dips','pindabc']),
+        'aprbhd' : set(['apar','jose','aprbhd']),
+        'the_week' : set(['aveek','tupperware','shelly','the_week']),
+        'JakeSuli' : set(['arvi','ssr','ronnie','jakesuli']),
+        'gopuman': set(['gops','chilly','gopuman']),
+        'akshara': set(['akshara','hak']),
+        'greybeard278': set(['paro','greybeard278']), # gops add some funny nickname for me and paro  and others also if you can
+        'Dobby': set(['dobby','kuneil']),
+        }
 
 weights = {
         'anishkasi': 2.3 + 0.81*3,
@@ -20,6 +32,14 @@ weights = {
         'greybeard278': 1.5 + 0.77*3,
         'Dobby': 1.2 + 0.76*3,
         }
+
+def return_names(split):
+    names = []
+    ss = set(split)
+    for key,val in nicknames.items():
+        if(len(val.intersection(ss)) >= 1):
+            names.append(key)
+    return names
 
 def create_weighted_team(names,num_teams):
     tol = 2
@@ -46,18 +66,22 @@ client = discord.Client(intents=intents)
 def filterOnlyOnlineMembers(member):
     return member.status != discord.Status.offline and not member.bot
 
+def online_members(message):
+    guild = message.guild 
+    vc = guild.voice_channels
+    mems = []
+    for i in vc:
+        members = i.members
+        mems.extend(members)
+    return [i.name for i in mems]
     
 @client.event
 async def on_message(message):
     z = re.findall(pattern,message.content)
     if(len(z) > 0):
-        membersInServer = message.guild.members
-        print(membersInServer)
-        allnames = set([i.name for i in membersInServer])
         split_msg = message.content.split(" ")
-        exclude = list(allnames.intersection(split_msg))
-        onlineMembersInServer = np.array(list(filter(filterOnlyOnlineMembers, membersInServer)))
-        names = [i.name for i in onlineMembersInServer]
+        exclude = return_names(split_msg)
+        names = online_members(message)
         names = [i for i in names if i not in exclude]
         print(names)
         if("-w" in split_msg):
